@@ -90,7 +90,7 @@ namespace HubSpot.NET.Core
         private T SendReceiveRequest<T>(string path, Method method) where T : new()
         {
             RestRequest request = ConfigureRequestAuthentication(path, method);
-            IRestResponse<T> response = _client.Execute<T>(request);
+            IRestResponse response = _client.Execute(request);
 
             if (response.IsSuccessful == false)
                 throw new HubSpotException("Error from HubSpot", new HubSpotError(response.StatusCode, response.StatusDescription), response.Content);
@@ -111,11 +111,10 @@ namespace HubSpot.NET.Core
         {
             RestRequest request = ConfigureRequestAuthentication(path, method);
            
-            if(entity != default)
-                request.AddJsonBody(entity);
-            
+            if(!entity.Equals(default(K)))
+                request.AddJsonBody(entity);            
 
-            IRestResponse<T> response = _client.Execute<T>(request);
+            IRestResponse response = _client.Execute(request);
 
             if (response.IsSuccessful == false)
                 throw new HubSpotException("Error from HubSpot", new HubSpotError(response.StatusCode, response.StatusDescription), response.Content);
@@ -136,7 +135,7 @@ namespace HubSpot.NET.Core
 
             RestRequest request = ConfigureRequestAuthentication(path, method);
 
-            if (entity != default)
+            if (!entity.Equals(default(T)))
                 request.AddJsonBody(entity);
 
             IRestResponse response = _client.Execute(request);
